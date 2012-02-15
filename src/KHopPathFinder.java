@@ -6,7 +6,7 @@ import java.util.List;
 public class KHopPathFinder extends PathFinder {
 	
 	private Integer k;
-	private Integer initialK;
+	protected Integer initialK;
 
 	public KHopPathFinder(Integer size, List<InputEdge> edges, List<Integer> startNodes, List<Integer> endNodes) {
 		super(size, edges, startNodes, endNodes);
@@ -32,7 +32,7 @@ public class KHopPathFinder extends PathFinder {
 		}
 	}
 
-	private List<Integer> kHopAvailableColors(Integer node, Integer k) {
+	protected List<Integer> kHopAvailableColors(Integer node, Integer k) {
 		List<Integer> kHopNeigborhood = kHopNodes(node, k, new HashMap<Integer, Boolean>());
 		Boolean[] available = new Boolean[pathLength+1];
 		available[0] = false;
@@ -53,7 +53,7 @@ public class KHopPathFinder extends PathFinder {
 		return result;
 	}
 	
-	private List<Integer> kHopNodes(Integer node, Integer k, HashMap<Integer, Boolean> visited){
+	protected List<Integer> kHopNodes(Integer node, Integer k, HashMap<Integer, Boolean> visited){
 		List<Integer> nodes = new ArrayList<Integer>();
 		nodes.add(node);
 		visited.put(node, true);

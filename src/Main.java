@@ -27,6 +27,15 @@ public class Main {
 		readInteractions();
 		readTerminals();
 		PathFinder finder = null;
+		
+		if (args.length == 2 && args[0].equals("multikhop") && args[1].equals("stats")){
+			MultiKPathFinder statsFinder = new MultiKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
+			Integer sampleSize = 1000;
+			Integer pathLength = 6;
+			List<MinKPath> paths = statsFinder.runKStats(pathLength, sampleSize);
+			return;
+		}
+		
 		if (args.length > 0 && args[0].equals("khop")){
 			System.out.println("K-Hop");
 			 finder = new KHopPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
@@ -34,6 +43,8 @@ public class Main {
 //			for (int i=0; i<randomFinders.length; i++){
 //				randomFinders[i] = new KHopPathFinder(proteins.size(), shuffledEdges(), membraneProteins, transcriptionProteins);
 //			}
+		} else if (args.length > 0 && args[0].equals("multikhop")){
+			
 		} else {
 			System.out.println("Normal");
 			finder = new PathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
