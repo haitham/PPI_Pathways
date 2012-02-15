@@ -30,8 +30,8 @@ public class Main {
 		
 		if (args.length == 2 && args[0].equals("multikhop") && args[1].equals("stats")){
 			MultiKPathFinder statsFinder = new MultiKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
-			Integer sampleSize = 1000;
-			Integer pathLength = 6;
+			Integer sampleSize = 500;
+			Integer pathLength = 10;
 			List<MinKPath> paths = statsFinder.runKStats(pathLength, sampleSize);
 			return;
 		}

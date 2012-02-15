@@ -9,11 +9,19 @@ public class MultiKPathFinder extends KHopPathFinder {
 	
 	private Integer[] nodeKValues;
 	private Boolean[] terminal;
+	private HashMap<Integer, List<Integer>> degreeNodeIndex;
 	
 	public MultiKPathFinder(Integer size, List<InputEdge> edges, List<Integer> startNodes, List<Integer> endNodes) {
 		super(size, edges, startNodes, endNodes);
-		terminal = new Boolean[size];
-		for (int i=0; i<size; i++){
+		initialK = 1;
+		degreeNodeIndex = new HashMap<Integer, List<Integer>>();
+		markTerminalNodes();
+		indexNodeDegrees();
+	}
+	
+	private void markTerminalNodes(){
+		terminal = new Boolean[networkSize];
+		for (int i=0; i<networkSize; i++){
 			terminal[i] = false;
 		}
 		for (Integer node: startNodes){
@@ -21,6 +29,25 @@ public class MultiKPathFinder extends KHopPathFinder {
 		}
 		for (Integer node: endNodes){
 			terminal[node] = true;
+		}
+	}
+	
+	private void indexNodeDegrees(){
+		Integer[] degree = new Integer[networkSize];
+		for (int i=0; i<networkSize; i++){
+			degree[i] = 0;
+			for (int j=0; j<networkSize; j++){
+				if (network[i][j] < infinity - 1){
+					degree[i] ++;
+				}
+			}
+		}
+		for (int i=0; i<degree.length; i++){
+			List<Integer> degreeNodes = degreeNodeIndex.get(degree[i]);
+			if (degreeNodes == null)
+				degreeNodes = new ArrayList<Integer>();
+			degreeNodes.add(i);
+			degreeNodeIndex.put(degree[i], degreeNodes);
 		}
 	}
 	
@@ -64,8 +91,13 @@ public class MultiKPathFinder extends KHopPathFinder {
 	
 	protected void colorAllNodes(){
 		nodeColors = new Integer[networkSize];
-		for (int i=0; i<networkSize; i++){
-			colorNode(i);
+		List<Integer> degrees = new ArrayList<Integer>(degreeNodeIndex.keySet());
+		Collections.sort(degrees);
+		for (int i=degrees.size()-1; i>=0; i--){
+			List<Integer> nodes = degreeNodeIndex.get(degrees.get(i));
+			for (Integer node : nodes){
+				colorNode(node);
+			}
 		}
 		//collect final k values
 		nodeKValues = collectKValues();
@@ -97,7 +129,8 @@ public class MultiKPathFinder extends KHopPathFinder {
 			if (availableColors.size() == 0){
 				currentK --;
 			} else {
-				nodeColors[node] = availableColors.get((int)Math.floor(availableColors.size() * Math.random()));
+//				nodeColors[node] = availableColors.get((int)Math.floor(availableColors.size() * Math.random()));
+				nodeColors[node] = (int) Math.ceil(pathLength * Math.random());
 				kTooLarge = false;
 			}
 		}
