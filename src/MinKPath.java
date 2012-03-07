@@ -22,4 +22,8 @@ public class MinKPath {
 	public List<Integer> getInnerNodes() {
 		return innerNodes;
 	}
+	
+	public Integer length(){
+		return innerNodes.size() + 2;
+	}
 }

@@ -19,6 +19,10 @@ public class PathFinder {
 	protected List<ComparableList<Integer>> colorSets;
 	protected HashMap<String, Integer> colorSetsIndex;
 	protected Integer[] nodeColors;
+	protected boolean tabulating;
+	protected boolean producingColors;
+	protected boolean consumingColors;
+	protected List<Integer[]> colorsQueue;
 	
 	protected class IterationResultComparator implements Comparator<IterationResult>{
 
@@ -29,6 +33,7 @@ public class PathFinder {
 	}
 	
 	public PathFinder(Integer size, List<InputEdge> edges, List<Integer> startNodes, List<Integer> endNodes) {
+		tabulating = true;
 		networkSize = size;
 		this.startNodes = startNodes;
 		this.endNodes = endNodes;
@@ -76,6 +81,14 @@ public class PathFinder {
 		return new PathResult(results, iterationsCount, System.currentTimeMillis() - startTime);
 	}
 	
+	public PathResult runWithExtraParams(Integer pathLength, Double confidence, boolean tabulating, boolean colorConsuming, boolean colorProducing, List<Integer[]> colorsQueue){
+		this.tabulating = tabulating;
+		this.producingColors = colorProducing;
+		this.consumingColors = colorConsuming;
+		this.colorsQueue = colorsQueue;
+		return this.run(pathLength, confidence);
+	}
+	
 	protected void colorAllNodes(){
 		nodeColors = new Integer[networkSize];
 		for (int i=0; i<networkSize; i++){
@@ -85,12 +98,27 @@ public class PathFinder {
 	
 	protected IterationResult iteration(){
 		// Color all nodes
-		colorAllNodes();
+		if (consumingColors){
+			if (colorsQueue.isEmpty())
+				colorAllNodes();
+			else
+				nodeColors = colorsQueue.remove(0);
+		} else {
+			colorAllNodes();
+			if (producingColors)
+				colorsQueue.add(nodeColors);
+		}
+
+		// calculate success probability of this iteration
+		Double successProbability = successProbability();
 		
-		//run DP
-		List<Integer> path = tabulate();
-		
-		return new IterationResult(path, minDistance[colorSets.size()-1][path.get(path.size()-1)], successProbability());
+		if (tabulating){
+			//run DP
+			List<Integer> path = tabulate();
+			return new IterationResult(path, minDistance[colorSets.size()-1][path.get(path.size()-1)], successProbability);
+		} else {
+			return new IterationResult(new ArrayList<Integer>(), 1.0, successProbability);
+		}
 	}
 	
 	protected Double successProbability(){
