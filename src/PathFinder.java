@@ -9,6 +9,7 @@ import java.util.PriorityQueue;
 public class PathFinder {
 	
 	public static final Double infinity = 100000000.0;
+	public static final Double roundOffError = 0.00000001;
 	protected Integer networkSize;
 	protected Double[][] network;
 	protected Double[][] minDistance;
@@ -51,14 +52,62 @@ public class PathFinder {
 		}
 	}
 	
-	public PathResult run(Integer pathLength, Double confidence){
-		// Initializing and hashing color sets
+	protected void initialize(Integer pathLength){
 		this.pathLength = pathLength;
 		colorSets = PathFinder.powerset(pathLength);
 		colorSetsIndex = new HashMap<String, Integer>();
 		for (int i=0; i<colorSets.size(); i++){
 			colorSetsIndex.put(colorSetKey(colorSets.get(i)), i);
 		}
+	}
+	
+	public void repeatIteration(Integer pathLength, Integer times){
+		initialize(pathLength);
+		Double failureProbability = 1.0;
+		Double minDistance = infinity;
+		IterationResult[] results = new IterationResult[times];
+		List<Integer> optimalIterations = new ArrayList<Integer>();
+		for (int i=0; i<times; i++){
+//			Long startIteration = System.currentTimeMillis();
+			IterationResult result = iteration();
+//			Long endIteration = System.currentTimeMillis();
+			//update failure probability
+//			failureProbability = failureProbability * (1 - result.successProbability);
+			if (result.distance > minDistance - roundOffError && result.distance < minDistance + roundOffError){ //equals
+				optimalIterations.add(i);
+			}
+			else if (result.distance < minDistance){
+				minDistance = result.distance;
+				optimalIterations = new ArrayList<Integer>();
+				optimalIterations.add(i);
+			}
+//			System.out.println("" + i + "\t\t" + failureProbability + "\t\t" + minDistance + "\t\t" + result.distance + ":" + result.path.toString() + "\t\t" + (endIteration - startIteration));
+//			System.out.println(i);
+			results[i] = result;
+		}
+		Integer winnerIndex = optimalIterations.get((int)Math.floor((Math.random() * optimalIterations.size())));
+		IterationResult winner = results[winnerIndex];
+		boolean winnerFound = false;
+		for (int i=0; i<times; i++){
+			failureProbability = failureProbability * (1.0 - results[i].successProbability);
+			String found = "";
+			if (winnerFound)
+				found = "1";
+			else{
+				if (results[i].path.equals(winner.path)){
+					found = "1";
+					winnerFound = true;
+				} else
+					found = "0";
+			}
+			Integer optimal = optimalIterations.contains(i) ? 1 : 0;
+			System.out.println("" + i + "\t" + (1.0 - failureProbability) + "\t" + results[i].path.toString() + "\t" + results[i].distance + "\t" + optimal + "\t" + found);
+		}
+	}
+	
+	public PathResult run(Integer pathLength, Double confidence){
+		// Initializing and hashing color sets
+		initialize(pathLength);
 		
 		Integer iterationsCount = 0;
 		Double failureProbability = 1.0;
@@ -112,13 +161,13 @@ public class PathFinder {
 		// calculate success probability of this iteration
 		Double successProbability = successProbability();
 		
-		if (tabulating){
+//		if (tabulating){
 			//run DP
-			List<Integer> path = tabulate();
-			return new IterationResult(path, minDistance[colorSets.size()-1][path.get(path.size()-1)], successProbability);
-		} else {
+//			List<Integer> path = tabulate();
+//			return new IterationResult(path, minDistance[colorSets.size()-1][path.get(path.size()-1)], successProbability);
+//		} else {
 			return new IterationResult(new ArrayList<Integer>(), 1.0, successProbability);
-		}
+//		}
 	}
 	
 	protected Double successProbability(){

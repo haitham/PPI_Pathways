@@ -27,11 +27,73 @@ public class Main {
 		
 		readInteractions();
 		readTerminals();
+		
+//		Integer nonTerminalCount = 0;
+//		for (int i=0; i<proteins.size(); i++){
+//			if (!membraneProteins.contains(i) && !transcriptionProteins.contains(i))
+//				nonTerminalCount ++;
+//		}
+		
+		if (args.length > 0 && args[0].equals("optimal-probability")){
+			Integer pathLength = 7;
+			Integer times = 500;
+			PathFinder finder;
+			if (args.length > 1 && args[1].equals("optimalkhop"))
+				finder = new OptimalKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
+			else
+				finder = new PathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
+			if (args.length > 2)
+				pathLength = new Integer(args[2]);
+			if (args.length > 3)
+				times = new Integer(args[3]);
+			finder.repeatIteration(pathLength, times);
+			return;
+		}
+		
 		List<PathFinder> finders = new ArrayList<PathFinder>();
-//		
-//		new MultiKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins).run(10, 0.5);
-//		if(true)
-//			return;
+		List<Integer> lengths = new ArrayList<Integer>();
+		List<Double> confidences = new ArrayList<Double>();
+		
+		if (args.length > 0 && args[0].equals("khopcomparison")){
+			if (args.length > 1)
+				confidences.add(new Double(args[1]));
+			else
+				confidences = Arrays.asList(0.7, 0.9, 0.99);
+			if (args.length > 2)
+				lengths.add(new Integer(args[2]));
+			else
+				lengths = Arrays.asList(6, 7, 8, 9);
+			
+			System.out.print("Will try for lengths: ");
+			for (Integer length : lengths)
+				System.out.print("" + length + " ");
+			System.out.print(", For confidences: ");
+			for (Double confidence : confidences)
+				System.out.print("" + confidence + " ");
+			System.out.println();
+			System.out.println("======================");
+			System.out.println();
+			
+			for (Integer length : lengths){
+				for (Double confidence : confidences){
+					List<Integer[]> colorsQueue = new ArrayList<Integer[]>();
+					PathFinder finder;
+					PathResult result;
+					System.out.print("(" + length + ", " + confidence + ") - Khop: ");
+					finder = new KHopPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
+					result = finder.runWithExtraParams(length, confidence, false, false, true, colorsQueue);
+					System.out.print(result.iterationsCount + " iterations, " + result.runtime + " milliseconds");
+					
+					System.out.print(" - MultiKhop: ");
+					finder = new MultiKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
+					result = finder.runWithExtraParams(length, confidence, false, true, false, colorsQueue);
+					System.out.print(result.iterationsCount + " iterations, " + result.runtime + " milliseconds");
+					
+					System.out.println();
+				}
+			}
+			return;
+		}
 		
 		if (args.length == 2 && args[0].equals("multikhop") && args[1].equals("stats")){
 			MultiKPathFinder statsFinder = new MultiKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
@@ -61,11 +123,12 @@ public class Main {
 //			randomFinders[i] = new PathFinder(proteins.size(), shuffledEdges(), membraneProteins, transcriptionProteins);
 //		}
 		
-		List<Integer> lengths = new ArrayList<Integer>();
-		List<Double> confidences = new ArrayList<Double>();
+		
 		finders = new ArrayList<PathFinder>();
 		
 		if (args.length > 0){
+			if (args[0].equals("minkhop"))
+				finders.add(new MinKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins));
 			if (args[0].equals("khop"))
 				finders.add(new KHopPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins));
 			else if (args[0].equals("multikhop"))

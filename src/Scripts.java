@@ -4,19 +4,87 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 
 public class Scripts {
 
 	public static void main(String[] args) {
-		filterHomosapiens();
+		countRepeatedPairs();
+	}
+	
+	public static void countRepeatedPairs(){
+		try{
+			FileInputStream iStream = new FileInputStream("data/homosapiens_custom.txt");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(iStream)));
+			String line = null;
+			HashMap<String, Integer> hash = new HashMap<String, Integer>();
+			HashMap<Integer, Integer> counts = new HashMap<Integer, Integer>();
+			while ((line = reader.readLine()) != null){
+				String[] parts = line.trim().split("\\s+");
+				String key = parts[0] + ";;" + parts[1];
+				Integer count = hash.get(key);
+				if (count == null){
+					count = hash.get(parts[1] + ";;" + parts[0]);
+				}
+				if (count == null)
+					count = 0;
+				count ++;
+				hash.put(key, count);
+			}
+			reader.close();
+			for (String pair : hash.keySet()){
+				Integer count = hash.get(pair);
+				Integer total = counts.get(count);
+				if (total == null)
+					total = 0;
+				total ++;
+				counts.put(count, total);
+			}
+			for (Integer count : counts.keySet())
+				System.out.println("" + count + "\t" + counts.get(count));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void probabilityHistogram(){
+		try {
+			Integer count = 0;
+			HashMap<String, Integer> histogram = new HashMap<String, Integer>();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream("data/samplescores.txt"))));;
+			String line = null;
+			while ((line = reader.readLine()) != null){
+				line = line.trim();
+				Integer freq = histogram.get(line);
+				if (freq == null)
+					freq = 0;
+				freq ++;
+				histogram.put(line, freq);
+				count++;
+			}
+			List<String> scores = new ArrayList<String>(histogram.keySet());
+			Collections.sort(scores);
+			for (String score : scores){
+				System.out.println(score);
+			}
+			for (String score : scores){
+				System.out.println(1.0*histogram.get(score)/count);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void restoreGODatabase(){
@@ -41,6 +109,72 @@ public class Scripts {
 				}
 			}
 		}
+	}
+	
+	public static void extractDipMintIntersection(){
+		try{
+			HashMap<String, String> mint = new HashMap<String, String>();
+			FileInputStream iStream = new FileInputStream("data/mint_hsa.txt");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(iStream)));
+			String line = null;
+			while ((line = reader.readLine()) != null){
+				String[] parts = line.trim().split("\\s+");
+				mint.put(parts[0] + ";;" + parts[1], parts[2]);
+			}
+			reader.close();
+			iStream = new FileInputStream("data/dip_hsa.txt");
+			reader = new BufferedReader(new InputStreamReader(new DataInputStream(iStream)));
+			FileOutputStream oStream = new FileOutputStream("data/homosapiens_custom.txt");
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(oStream)));
+			while ((line = reader.readLine()) != null){
+				String[] parts = line.trim().split("\\s+");
+				String score1 = mint.get(parts[0] + ";;" + parts[1]);
+				String score2 = mint.get(parts[1] + ";;" + parts[0]);
+				if (score1 != null)
+					writer.write(parts[0] + "\t" + parts[1] + "\t" + score1 + "\n");
+				else if (score2 != null)
+					writer.write(parts[0] + "\t" + parts[1] + "\t" + score2 + "\n");
+			}
+			writer.close();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void sifToCustom(){
+		try{
+			FileInputStream iStream = new FileInputStream("data/homosapiens_custom.txt.sif");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(iStream)));
+			FileOutputStream oStream = new FileOutputStream("data/homosapiens_custom.txt");
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(oStream)));
+			String line = null;
+			while ((line = reader.readLine()) != null){
+				String[] parts = line.trim().split("\\s+");
+				writer.write(parts[0] + "\t" + parts[2] + "\t" + parts[1] + "\n");
+			}
+			writer.close();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void refineMintHSA(){
+		try{
+			FileInputStream iStream = new FileInputStream("data/9606_all.graph");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(iStream)));
+			FileOutputStream oStream = new FileOutputStream("data/homosapiens_custom.txt");
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(oStream)));
+			String line = null;
+			while ((line = reader.readLine()) != null){
+				String[] parts = line.trim().split("\\s+");
+				if (!parts[2].equals("-"))
+					writer.write(parts[0] + "\t" + parts[1] + "\t" + parts[2] + "\n");
+			}
+			writer.close();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public static void filterHomosapiens(){

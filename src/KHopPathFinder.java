@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.PriorityQueue;
 
 
 public class KHopPathFinder extends PathFinder {
@@ -12,6 +13,11 @@ public class KHopPathFinder extends PathFinder {
 	protected Integer maxK;
 	protected HashMap<Integer, List<Integer>> degreeNodeIndex;
 	protected Integer[] nodeKValues;
+	protected boolean colorPooling;
+	protected PriorityQueue<Coloring> colorPool;
+	protected static Integer colorPoolSize = 10000;
+	protected Coloring currentColoring;
+	protected Integer[][][] kHopNodes;
 	
 	public static final String RANDOM_COLORING_ORDER = "RandomOrder";
 	public static final String DEGREE_COLORING_ORDER = "HighestDegreeFirst";
@@ -19,6 +25,42 @@ public class KHopPathFinder extends PathFinder {
 	public static final String MAX_K_COLORING_SCHEME = "MaxKColor";
 	protected static String default_coloring_order = RANDOM_COLORING_ORDER;
 	protected static String default_coloring_scheme = RANDOM_COLORING_SCHEME;
+	
+	protected class Coloring implements Comparable<Coloring>{
+		Integer[] nodeColors;
+		Integer[] nodeKValues;
+		Integer score;
+		public Coloring(Integer[] nodeColors, Integer[] nodeKValues) {
+			this.nodeColors = nodeColors;
+			this.nodeKValues = nodeKValues;
+		}
+		
+		public int compareTo(Coloring coloring) {
+			return coloring.score().compareTo(this.score());
+		}
+		
+		public Integer score(){
+			if (this.score != null)
+				return this.score;
+			Integer score = 0;
+			for (int i=0; i<nodeKValues.length; i++)
+				score += nodeKValues[i];
+			this.score = score;
+			return score;
+		}
+	}
+	
+	protected void initialize(Integer pathLength){
+		super.initialize(pathLength);
+		kHopNodes = new Integer[networkSize][maxK+2][];
+		for (int i=0; i<networkSize; i++){
+			for (int j=0; j<kHopNodes[i].length; j++){
+				List<Integer> neighbors = kHopNodes(i, j, new HashMap<Integer, Boolean>());
+				kHopNodes[i][j] = new Integer[neighbors.size()];
+				kHopNodes[i][j] = neighbors.toArray(kHopNodes[i][j]);
+			}
+		}
+	}
 
 	public KHopPathFinder(Integer size, List<InputEdge> edges, List<Integer> startNodes, List<Integer> endNodes) {
 		super(size, edges, startNodes, endNodes);
@@ -67,9 +109,41 @@ public class KHopPathFinder extends PathFinder {
 //		}
 //	}
 	
+	protected void initializeColorPooling(){
+		colorPool = new PriorityQueue<Coloring>();
+		Long start = System.currentTimeMillis();
+		for (int i=0; i<colorPoolSize; i++){
+//			Long startIteration = System.currentTimeMillis();
+			colorAllNodes();
+			Integer[] kValues = collectKValues();
+			colorPool.add(new Coloring(this.nodeColors, kValues));
+//			System.out.println("" + i + ": " + (System.currentTimeMillis() - startIteration));
+		}
+		System.out.println("Network size = " + networkSize + ", Total time taken for generating " + colorPoolSize + " colorings = " + (System.currentTimeMillis() - start) + "milliseconds");
+		nodeColors = null;
+		nodeKValues = null;
+		colorPooling = true;
+//		System.exit(0);
+	}
+	
+	public PathResult runWithPooling(Integer pathLength, Double confidence){
+		initializeColorPooling();
+		return this.run(pathLength, confidence);
+	}
+	
 	protected void colorAllNodes(String coloringOrder, String coloringScheme) {
+		if (colorPooling){
+			currentColoring = colorPool.remove();
+			nodeColors = currentColoring.nodeColors;
+			return;
+		}
 		nodeColors = new Integer[networkSize];
 		if (RANDOM_COLORING_ORDER.equals(coloringOrder)){
+			for (int i=0; i<networkSize; i++){
+				colorNode(i, coloringScheme);
+			}
+			/*  Tamer: testing
+			// Obsolete code: randomizing a node is not needed anymore since we use random coloring strategy for each node
 			List<Integer> uncoloredNodes = new ArrayList<Integer>();
 			for (int i=0; i<networkSize; i++){
 				uncoloredNodes.add(i);
@@ -83,6 +157,7 @@ public class KHopPathFinder extends PathFinder {
 				System.out.println(uncoloredNodes.size());
 				System.out.println("ERROR: finished coloring and still some nodes are uncolored");
 			}
+			*/
 		} else if (DEGREE_COLORING_ORDER.equals(coloringOrder)){
 			List<Integer> degrees = new ArrayList<Integer>(degreeNodeIndex.keySet());
 			Collections.sort(degrees);
@@ -93,15 +168,15 @@ public class KHopPathFinder extends PathFinder {
 				}
 			}
 		}
-		//collect final k values
-		nodeKValues = collectKValues();
 	}
 	
 	protected void colorAllNodes(){
 		colorAllNodes(default_coloring_order, default_coloring_scheme);
 	}
 
-	private Integer[] collectKValues() {
+	protected Integer[] collectKValues() {
+		if (colorPooling)
+			return currentColoring.nodeKValues;
 		Integer[] kValues = new Integer[networkSize];
 		for (int i=0; i<networkSize; i++){
 			Integer currentK = maxK + 1;
@@ -137,7 +212,7 @@ public class KHopPathFinder extends PathFinder {
 	}
 
 	protected List<Integer> kHopAvailableColors(Integer node, Integer k) {
-		List<Integer> kHopNeigborhood = kHopNodes(node, k, new HashMap<Integer, Boolean>());
+		List<Integer> kHopNeigborhood = Arrays.asList(kHopNodes[node][k]); //kHopNodes(node, k, new HashMap<Integer, Boolean>());
 		Boolean[] available = new Boolean[pathLength+1];
 		available[0] = false;
 		for (int i=1; i<available.length; i++){
@@ -173,7 +248,8 @@ public class KHopPathFinder extends PathFinder {
 	}
 	
 	protected Double successProbability(){
-		//TODO calculate k
+		//collect final k values
+		nodeKValues = collectKValues();
 		k = Collections.min(Arrays.asList(nodeKValues));
 		Double result = 1.0;
 		//(m-k)!/(m-k)^(m-k)

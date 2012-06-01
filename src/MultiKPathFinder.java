@@ -106,6 +106,8 @@ public class MultiKPathFinder extends KHopPathFinder {
 	}
 	
 	protected Double successProbability(){
+		//collect final k values
+		nodeKValues = collectKValues();
 		List<Integer[]> placements = getDistinctPlacements(getMinKPath());
 		long maxNumberOfColorings = 0;
 		for (Integer[] placement : placements){
@@ -140,7 +142,7 @@ public class MultiKPathFinder extends KHopPathFinder {
 		return chromaticNumber(edges, constraintGraph.length);
 	}
 	
-	long chromaticNumber(List<Integer[]> edges, Integer size){
+	protected long chromaticNumber(List<Integer[]> edges, Integer size){
 		if (size == 0){
 			return 0;
 		}
