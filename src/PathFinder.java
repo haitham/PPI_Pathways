@@ -172,7 +172,7 @@ public class PathFinder {
 	
 	protected Double successProbability(){
 		Double result = 1.0;
-		//k!/k^k
+		//m!/m^m
 		for (int i=pathLength; i>0; i--){
 			result = result * i / pathLength;
 		}

@@ -216,7 +216,7 @@ public class Main {
 	
 	private static void readInteractions(){
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream("data/homosapiens_custom.txt"))));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream("data/interactions.txt"))));
 			String line = null;
 			Integer proteinCounter = 0;
 			while ((line = reader.readLine()) != null){

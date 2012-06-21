@@ -20,7 +20,86 @@ import java.util.Map.Entry;
 public class Scripts {
 
 	public static void main(String[] args) {
-		countRepeatedPairs();
+		summarizeIterations(6, 500, 20, 10, 6.752593910073201);
+	}
+	
+	private static class Iteration{
+		Double oldProbablity;
+		Double newProbablity;
+		Double bestDistance;
+		Double success;
+		
+		public Iteration(Double oldProbability, Double newProbability, Double bestDistance) {
+			this.oldProbablity = oldProbability;
+			this.newProbablity = newProbability;
+			this.bestDistance = bestDistance;
+		}
+	}
+	
+	public static void summarizeIterations(Integer pathlength, Integer iterationsCount, Integer experimentsCount, Integer skipper, Double targetDistance){
+		Iteration[][] iterations = new Iteration[iterationsCount][experimentsCount];
+		try {
+			BufferedReader[] readers = new BufferedReader[experimentsCount];
+			for (int i=0; i<experimentsCount; i++){
+				String order = "" + (i+1);
+				while (order.length() != ("" + experimentsCount).length())
+					order = "0" + order;
+				readers[i] = new BufferedReader(new InputStreamReader(new FileInputStream("data/iterations/" + pathlength + "." + order + ".out")));
+			}
+			for (int i=0; i<iterationsCount; i++){
+				for (int e=0; e<experimentsCount; e++){
+					try{
+						String line = readers[e].readLine();
+						String[] parts = line.trim().split("\\s+");
+						Double oldProbability = new Double(parts[1].trim());
+						Double newProbability = new Double(parts[2].trim());
+						Double bestDistance = new Double(parts[3].trim());
+						iterations[i][e] = new Iteration(oldProbability, newProbability, bestDistance);
+					} catch (Exception ex){
+						ex.printStackTrace();
+					}
+				}
+			}
+			for (int i=0; i<experimentsCount; i++){
+				readers[i].close();
+			}
+			for (int i=0; i<iterationsCount; i++){
+				for (int e=0; e<experimentsCount; e++){
+					if (iterations[i][e].bestDistance <= (targetDistance + 0.0000001))
+						iterations[i][e].success = 1.0;
+					else
+						iterations[i][e].success = 0.0;
+				}
+			}
+			for (int i=0; i<iterationsCount; i++){
+				Double newProbability = 0.0;
+				Double oldProbability = 0.0;
+				Double success = 0.0;
+				List<Double> probs = new ArrayList<Double>();
+				for (int e=0; e<experimentsCount; e++){
+					newProbability += iterations[i][e].newProbablity;
+					oldProbability += iterations[i][e].oldProbablity;
+					success += iterations[i][e].success;
+					probs.add(iterations[i][e].newProbablity);
+				}
+				Collections.sort(probs);
+				Double minSkipper = 0.0;
+				for (int k=skipper; k<experimentsCount; k++)
+					minSkipper += probs.get(k);
+				Double maxSkipper = 0.0;
+				for (int k=0; k<experimentsCount-skipper; k++)
+					maxSkipper += probs.get(k);
+				
+				oldProbability = oldProbability / (1.0 * experimentsCount);
+				newProbability = newProbability / (1.0 * experimentsCount);
+				success = success / (1.0 * experimentsCount);
+				minSkipper = minSkipper / (1.0 * (experimentsCount - skipper));
+				maxSkipper = maxSkipper / (1.0 * (experimentsCount - skipper));
+				System.out.println("" + oldProbability + "\t" + newProbability + "\t" + minSkipper + "\t" + maxSkipper + "\t" + success);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void countRepeatedPairs(){
@@ -88,22 +167,32 @@ public class Scripts {
 	}
 	
 	public static void restoreGODatabase(){
-		for (File file: new File("C:/Users/hgabr/Desktop/go_201111-assocdb-tables/go_201111-assocdb-tables").listFiles()){
-			if (file.getName().indexOf(".sql") > 0){
-				try {
-					Process process = Runtime.getRuntime().exec("cmd /c mysql -u root go < " + "C:\\Users\\hgabr\\Desktop\\go_201111-assocdb-tables\\go_201111-assocdb-tables\\" + file.getName());
-					System.out.println(process.waitFor());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		for (File file: new File("C:/Users/hgabr/Desktop/go_201111-assocdb-tables/go_201111-assocdb-tables").listFiles()){
+//		for (File file: new File("C:/Users/hgabr/Desktop/go_201206-assocdb-tables").listFiles()){
+//			if (file.getName().indexOf(".sql") > 0){
+//				try {
+//					Process process = Runtime.getRuntime().exec("cmd /c mysql -u root go < " + "c:\\Users\\hgabr\\Desktop\\go_201206-assocdb-tables\\" + file.getName());
+//					System.out.println(process.waitFor());
+//					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+//					String line = null;
+//					while ((line = reader.readLine()) != null){
+//						System.out.println(line);
+//					}
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+		for (File file: new File("C:/Users/hgabr/Desktop/go_201206-assocdb-tables").listFiles()){
 			if (file.getName().indexOf(".txt") > 0){
 				try {
 					System.out.println(file.getName());
-					Process process = Runtime.getRuntime().exec("cmd /c mysqlimport -u root -L go " + "C:\\Users\\hgabr\\Desktop\\go_201111-assocdb-tables\\go_201111-assocdb-tables\\" + file.getName());
+					Process process = Runtime.getRuntime().exec("cmd /c mysqlimport -u root -L go " + "c:\\Users\\hgabr\\Desktop\\go_201206-assocdb-tables\\" + file.getName());
 					System.out.println(process.waitFor());
+					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+					String line = null;
+					while ((line = reader.readLine()) != null){
+						System.out.println(line);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -158,11 +247,11 @@ public class Scripts {
 		}
 	}
 	
-	public static void refineMintHSA(){
+	public static void refineMint(){
 		try{
-			FileInputStream iStream = new FileInputStream("data/9606_all.graph");
+			FileInputStream iStream = new FileInputStream("data/83334_all.graph");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(iStream)));
-			FileOutputStream oStream = new FileOutputStream("data/homosapiens_custom.txt");
+			FileOutputStream oStream = new FileOutputStream("data/mint_custom.txt");
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(oStream)));
 			String line = null;
 			while ((line = reader.readLine()) != null){
