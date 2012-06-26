@@ -34,6 +34,13 @@ public class Main {
 //				nonTerminalCount ++;
 //		}
 		
+		if (args.length > 0 && args[0].equals("enrichment")){
+			HashMap<String, List<String>> annotations = readAnnotations();
+			List<String> path = readPath();
+			System.out.println(new EnrichmentMeter(proteins, annotations, path).measure());
+			return;
+		}
+		
 		if (args.length > 0 && args[0].equals("optimal-probability")){
 			Integer pathLength = 7;
 			Integer times = 500;
@@ -127,6 +134,8 @@ public class Main {
 		finders = new ArrayList<PathFinder>();
 		
 		if (args.length > 0){
+			if (args[0].equals("optimalkhop"))
+				finders.add(new OptimalKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins));
 			if (args[0].equals("minkhop"))
 				finders.add(new MinKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins));
 			if (args[0].equals("khop"))
@@ -183,11 +192,46 @@ public class Main {
 	//						randomWins ++;
 	//					}
 	//				}
-					System.out.print(result.iterationsCount + " iterations, " + result.runtime + " milliseconds");
+					System.out.println(result.iterationsCount + " iterations, " + result.runtime + " milliseconds");
+					for (Integer node : result.paths.peek().path)
+						System.out.print(proteins.get(node) + " ");
 					System.out.println();
 				}
 			}
 		}
+	}
+	
+	private static HashMap<String, List<String>> readAnnotations(){
+		HashMap<String, List<String>> annotations = new HashMap<String, List<String>>();
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream("data/annotations.txt"))));
+			String line = null;
+			while ((line = reader.readLine()) != null){
+				String[] parts = line.trim().split("\\s+");
+				List<String> terms = annotations.get(parts[0].trim());
+				if (terms == null)
+					terms = new ArrayList<String>();
+				terms.add(parts[1].trim());
+				annotations.put(parts[0].trim(), terms);
+			}
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return annotations;
+	}
+	
+	private static List<String> readPath(){
+		List<String> path = null;
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream("data/path.txt"))));
+			String line = reader.readLine();
+			path = Arrays.asList(line.split("\\s+"));
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return path;
 	}
 	
 	private static void readTerminals(){
