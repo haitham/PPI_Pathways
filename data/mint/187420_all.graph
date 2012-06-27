@@ -1,0 +1,6 @@
+O26708	O27552	0.431	0.431	taxid:-1(in vitro);
+O27132	O27552	0.644	0.644	taxid:-1(in vitro);
+O27552	O26708	0.431	0.431	taxid:-1(in vitro);
+O27552	O27132	0.644	0.644	taxid:-1(in vitro);
+O27552	O27585	0.431	0.431	taxid:-1(in vitro);
+O27585	O27552	0.431	0.431	taxid:-1(in vitro);

@@ -1,0 +1,7 @@
+P07165	P18591	0.644	0.644	taxid:-1(in vitro);
+P07165	P18592	0.644	0.644	taxid:-1(in vitro);
+P07165	P18594	0.644	0.644	taxid:-1(in vitro);
+P07166	P07165	0.644	0.644	taxid:-1(in vitro);
+P18591	P07165	0.644	0.644	taxid:176299("Agrobacterium tumefaciens (strain C58 / ATCC 33970)");
+P18592	P07165	0.644	0.644	taxid:-1(in vitro);
+P18594	P07165	0.644	0.644	taxid:176299("Agrobacterium tumefaciens (strain C58 / ATCC 33970)");

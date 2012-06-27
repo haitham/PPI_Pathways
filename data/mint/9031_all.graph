@@ -1,0 +1,18 @@
+O13016	P10288	0.895	0.932	taxid:-1(in vitro);
+O42486	P10288	0.815	0.833	taxid:-1(in vitro);
+P01109	P52162	0.644	0.644	taxid:-1(in vitro);
+P01109	P52162-2	0.644	0.644	taxid:-1(in vitro);
+P02588	Q9DEG4	0.28	0.28	taxid:-1(in vitro);
+P08251	Q8AYS8	0.482	0.482	taxid:9031(Gallus gallus);
+P10288	O13016	0.895	0.932	taxid:-1(in vitro);
+P10288	O42486	0.815	0.833	taxid:-1(in vitro);
+P26990	Q9DG15	0.209	0.209	taxid:9031(Gallus gallus);
+P49024	Q04929	0.28	0.28	-;
+P52162-2	P01109	0.644	0.644	taxid:-4(in vivo);
+P52162	P01109	0.644	0.644	taxid:-4(in vivo);
+Q5ZLR6	Q9DG15	0.28	0.28	taxid:-1(in vitro);
+Q8AYS8	P08251	0.482	0.482	taxid:9031(Gallus gallus);
+Q8UUX6	Q9YGC1	0.28	0.188	taxid:9031(Gallus gallus);
+Q90738	P00523	0.28	0.28	-;
+Q9DE64	Q9DG15	0.431	0.431	taxid:-4(in vivo);
+Q9DG15	Q9DE64	0.431	0.431	taxid:-4(in vivo);

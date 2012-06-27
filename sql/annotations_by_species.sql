@@ -1,6 +1,8 @@
-﻿SELECT db.xref_key, t.acc FROM gene_product as gp
-inner join association as a on gp.id = a.gene_product_id
-inner join term as t on t.id = a.term_id
-inner join dbxref as db on db.id = gp.dbxref_id
-inner join species as s on s.id = gp.species_id
-where s.ncbi_taxa_id = 562 and db.xref_dbname = 'UniProtKB';
+SELECT distinct dbxref.xref_key, term.acc FROM term
+ INNER JOIN graph_path ON (term.id=graph_path.term1_id)
+ INNER JOIN association ON (graph_path.term2_id=association.term_id)
+ INNER JOIN gene_product ON (association.gene_product_id=gene_product.id)
+ INNER JOIN species ON (gene_product.species_id=species.id)
+ INNER JOIN dbxref ON (gene_product.dbxref_id=dbxref.id)
+where species.ncbi_taxa_id = 562
+and dbxref.xref_dbname = 'UniProtKB';

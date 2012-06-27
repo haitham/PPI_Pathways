@@ -1,0 +1,6 @@
+O60046	P78695	0.691	0.691	taxid:5141(Neurospora crassa);
+P78714	Q01371	0.431	0.431	taxid:5141(Neurospora crassa);
+Q6Q2C8	Q96US6	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q96US6	Q6Q2C8	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q9UUY8	Q9C168	0.431	0.431	taxid:4932(Saccharomyces cerevisiae);
+Q9UUY8	Q9C169	0.28	0.28	taxid:5141(Neurospora crassa);

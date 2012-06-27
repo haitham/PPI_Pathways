@@ -1,0 +1,10 @@
+P46266	P00868	0.431	0.431	taxid:-1(in vitro);
+Q41009	P46266	0.28	0.28	taxid:-1(in vitro);
+Q41009	Q9MUK5	0.644	0.644	taxid:-1(in vitro);
+Q9MUK5	P09911	0.28	0.28	taxid:-1(in vitro);
+Q9MUK5	P16002	0.28	0.28	taxid:-1(in vitro);
+Q9MUK5	P21528	0.28	0.28	taxid:-1(in vitro);
+Q9MUK5	P37900	0.28	0.28	taxid:-1(in vitro);
+Q9MUK5	Q41009	0.644	0.644	taxid:-1(in vitro);
+Q9MUK5	Q43715	0.431	0.431	taxid:-1(in vitro);
+Q9MUK5	Q9LKR1	0.431	0.431	taxid:-1(in vitro);

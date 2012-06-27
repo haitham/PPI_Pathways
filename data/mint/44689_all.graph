@@ -1,0 +1,11 @@
+P20790	Q54IZ7	0.344	0.344	taxid:-1(in vitro);
+P36410	O96904	0.28	0.28	taxid:-1(in vitro);
+P36412	O96904	0.344	0.344	taxid:-1(in vitro);
+P36412	Q54IZ7	0.344	0.344	taxid:-1(in vitro);
+Q54IZ7	P20790	0.344	0.344	taxid:44689(Dictyostelium discoideum);
+Q54IZ7	P36412	0.344	0.344	taxid:44689(Dictyostelium discoideum);
+Q54IZ7	Q550H6	0.171	0.171	taxid:44689(Dictyostelium discoideum);
+Q54JA3	Q54K81	0.28	0.28	taxid:-1(in vitro);
+Q54JA5	Q54K81	0.28	0.28	taxid:-1(in vitro);
+Q54JE1	Q54K81	0.28	0.28	taxid:-1(in vitro);
+Q54KF7	Q54K81	0.28	0.28	taxid:-1(in vitro);

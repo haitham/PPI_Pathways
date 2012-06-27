@@ -1,0 +1,6 @@
+p03485	P03428	0.28	0.28	taxid:286419(Canis familiaris dingo);
+p03485	P03433	0.28	0.28	taxid:286419(Canis familiaris dingo);
+p03485	P03452	0.28	0.28	taxid:286419(Canis familiaris dingo);
+p03485	P03466	0.28	0.28	taxid:286419(Canis familiaris dingo);
+P03485	P03508	0.644	0.431	taxid:-1(in vitro);
+P03508	P03485	0.644	0.431	taxid:-1(in vitro);

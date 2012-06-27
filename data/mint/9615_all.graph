@@ -1,0 +1,5 @@
+O97758	Q2TFN9	0.431	0.431	taxid:-1(in vitro);
+Q865S3	O97758	0.171	0.171	taxid:9615(Canis familiaris);
+Q865S3	Q9N1Q2	0.55	0.55	taxid:-1(in vitro);
+Q865S3	Q9N1Q3	0.28	0.28	taxid:-1(in vitro);
+Q9N1Q2	Q865S3	0.55	0.55	taxid:9615(Canis familiaris);

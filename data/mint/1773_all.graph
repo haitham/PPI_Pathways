@@ -1,0 +1,10 @@
+O07778	O07777	0.431	0.431	taxid:-1(in vitro);
+O33244	O33245	0.644	0.644	taxid:-1(in vitro);
+O33245	O33244	0.644	0.644	taxid:-1(in vitro);
+O53512	P64767	0.313	0.313	taxid:-1(in vitro);
+O53692	P0A568	0.431	0.431	taxid:-1(in vitro);
+P0A564	P0A566	0.861	0.861	taxid:-1(in vitro);
+P0A566	P0A564	0.861	0.861	taxid:-1(in vitro);
+P64767	O53512	0.313	0.313	taxid:-1(in vitro);
+P96364	O07932	0.644	0.644	taxid:-1(in vitro);
+Q7D756	Q79FE1	0.644	0.644	taxid:-1(in vitro);

@@ -1,0 +1,13 @@
+P53024	Q0PVD7	0.171	0.171	taxid:4922(Pichia pastoris);
+P53024	Q0PVD9	0.171	0.171	taxid:4922(Pichia pastoris);
+P53024	Q0PVE0	0.171	0.171	taxid:4922(Pichia pastoris);
+Q0PVD7	Q0PVD9	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q0PVD7	Q0PVE0	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q0PVD8	P53024	0.171	0.171	taxid:4922(Pichia pastoris);
+Q0PVD8	Q0PVE0	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q0PVD9	Q0PVD7	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q0PVE0	Q0PVD7	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q0PVE0	Q0PVD8	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q9P4C6	P53024	0.171	0.171	taxid:4922(Pichia pastoris);
+Q9P4C8	Q0PVD9	0.431	0.431	taxid:4932(Saccharomyces cerevisiae);
+Q9P4C8	Q0PVE0	0.431	0.431	taxid:4932(Saccharomyces cerevisiae);

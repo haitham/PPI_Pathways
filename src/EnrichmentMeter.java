@@ -25,7 +25,7 @@ public class EnrichmentMeter {
 		for (String protein : proteins){
 			List<String> terms = annotations.get(protein);
 			if (terms == null)
-				terms = new ArrayList<>();
+				terms = new ArrayList<String>();
 			proteinAnnotations.put(protein, terms);
 			for (String term : terms){
 				List<String> myProteins = termAnnotations.get(term);

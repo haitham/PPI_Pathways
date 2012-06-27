@@ -1,0 +1,15 @@
+Q06129	Q06128	0.431	0.431	taxid:-1(in vitro);
+Q97Z82	Q980J6	0.676	0.676	taxid:2287(Sulfolobus solfataricus);
+Q97Z82	Q9UXG0	0.84	0.84	taxid:2287(Sulfolobus solfataricus);
+Q97Z83	Q9UWW1	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q97Z83	Q9UXG0	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q980J6	Q97Z82	0.676	0.676	taxid:4932(Saccharomyces cerevisiae);
+Q9UWW1	Q97Z83	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q9UWW1	Q9UXG0	0.777	0.777	taxid:-1(in vitro);
+Q9UXC2	P95980	0.28	0.28	taxid:-1(in vitro);
+Q9UXG0	Q97Z82	0.84	0.84	taxid:-1(in vitro);
+Q9UXG0	Q97Z83	0.644	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q9UXG0	Q980J6	0.344	0.344	taxid:2287(Sulfolobus solfataricus);
+Q9UXG0	Q9UWW1	0.777	0.777	taxid:4932(Saccharomyces cerevisiae);
+Q9UXG0	Q9UXG1	0.718	0.718	taxid:2287(Sulfolobus solfataricus);
+Q9UXG1	Q9UXG0	0.718	0.718	taxid:4932(Saccharomyces cerevisiae);

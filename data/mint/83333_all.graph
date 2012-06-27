@@ -1,0 +1,8 @@
+P0A6F5	P0A6F9	0.431	0.431	taxid:-1(in vitro);
+P0A855	P19934	0.857	0.857	taxid:-1(in vitro);
+P0A912	P0A855	0.644	0.644	taxid:-1(in vitro);
+P27434	P16926	0.431	0.431	taxid:562(Escherichia coli);
+P33225	P36662	0.797	0.797	taxid:-1(in vitro);
+P36662	P33225	0.797	0.797	taxid:562(Escherichia coli);
+P61320	P0A912	0.431	0.431	taxid:-1(in vitro);
+P69853	P18775	0.431	0.431	taxid:562(Escherichia coli);

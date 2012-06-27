@@ -1,0 +1,5 @@
+P0C6Z0	Q3KST1	0.28	0.431	taxid:4932(Saccharomyces cerevisiae);
+P0C726	Q69126	0.28	0.431	taxid:4932(Saccharomyces cerevisiae);
+Q1HVF2	Q777F4	0.28	0.431	taxid:4932(Saccharomyces cerevisiae);
+Q1HVI2	Q777G9	0.431	0.644	taxid:4932(Saccharomyces cerevisiae);
+Q777G9	Q1HVI2	0.431	0.644	taxid:4932(Saccharomyces cerevisiae);

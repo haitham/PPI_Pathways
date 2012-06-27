@@ -208,6 +208,8 @@ public class Main {
 			String line = null;
 			while ((line = reader.readLine()) != null){
 				String[] parts = line.trim().split("\\s+");
+				if (!parts[1].trim().startsWith("GO:"))
+					continue;
 				List<String> terms = annotations.get(parts[0].trim());
 				if (terms == null)
 					terms = new ArrayList<String>();

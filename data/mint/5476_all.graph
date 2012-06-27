@@ -1,0 +1,13 @@
+O14426	Q5AF35	0.28	0.28	taxid:-1(in vitro);
+O14426	Q5AMQ3	0.28	0.28	taxid:-1(in vitro);
+P43063	Q5AL49	0.28	0.28	taxid:5476(Candida albicans);
+Q5ABE2	P43063	0.28	0.28	taxid:5476(Candida albicans);
+Q5ABE2	Q5AMQ3	0.28	0.28	taxid:5476(Candida albicans);
+Q5AH02	P43063	0.28	0.28	taxid:5476(Candida albicans);
+Q5AH02	Q5A0A9	0.28	0.28	taxid:5476(Candida albicans);
+Q5AH02	Q5AAF4	0.28	0.28	taxid:5476(Candida albicans);
+Q5AH02	Q5AL52	0.28	0.28	taxid:5476(Candida albicans);
+Q5AH02	Q5ALY0	0.28	0.28	taxid:5476(Candida albicans);
+Q5AM49	Q59UR3	0.28	0.28	taxid:5476(Candida albicans);
+Q8X1E6	Q9Y7W4	0.777	0.777	taxid:4932(Saccharomyces cerevisiae);
+Q9Y7W4	Q8X1E6	0.777	0.777	taxid:4932(Saccharomyces cerevisiae);
