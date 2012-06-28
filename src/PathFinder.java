@@ -118,12 +118,15 @@ public class PathFinder {
 			iterationsCount ++;
 			//New iteration
 			IterationResult result = iteration();
+			if (result.path.size() != pathLength)
+				continue; //no colorful path found
 			//add its result if it's not included already
 			if (!results.contains(result)){
 				results.add(result);
 			}
 			//update failure probability
 			failureProbability = failureProbability * (1 - result.successProbability);
+			System.out.println(1 - failureProbability);
 //			System.out.println("LOG: (" + pathLength + ", " + confidence + ") iteration: " + iterationsCount + ", confidence: " + (1-failureProbability));
 		}
 		
@@ -234,7 +237,7 @@ public class PathFinder {
 			min = minNode[setIndex][min];
 		}
 		if (!startNodes.contains(path.get(0))){
-			System.out.println("EXCEPTION!!! - There should be mistake - path doesn't start with a start node");
+			System.out.println("No colorful path found");
 		}
 		return path;
 	}

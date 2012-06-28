@@ -193,8 +193,13 @@ public class Main {
 	//					}
 	//				}
 					System.out.println(result.iterationsCount + " iterations, " + result.runtime + " milliseconds");
-					for (Integer node : result.paths.peek().path)
-						System.out.print(proteins.get(node) + " ");
+					System.out.println("" + result.paths.size() + "pathways");
+					IterationResult iteration = null;
+					while ((iteration = result.paths.poll()) != null){
+						for (Integer node : iteration.path)
+							System.out.print(proteins.get(node) + " ");
+						System.out.println(iteration.distance);
+					}
 					System.out.println();
 				}
 			}

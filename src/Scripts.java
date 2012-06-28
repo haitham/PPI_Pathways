@@ -20,7 +20,7 @@ import java.util.Map.Entry;
 public class Scripts {
 
 	public static void main(String[] args) {
-		summarizeIterations(6, 500, 20, 10, 6.752593910073201);
+		refineMint();
 	}
 	
 	private static class Iteration{
@@ -249,7 +249,7 @@ public class Scripts {
 	
 	public static void refineMint(){
 		try{
-			FileInputStream iStream = new FileInputStream("data/83334_all.graph");
+			FileInputStream iStream = new FileInputStream("data/4932_all.graph");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(iStream)));
 			FileOutputStream oStream = new FileOutputStream("data/mint_custom.txt");
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(oStream)));
