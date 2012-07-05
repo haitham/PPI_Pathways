@@ -18,6 +18,13 @@ public class MultiKPathFinder extends KHopPathFinder {
 	private Boolean[] terminal;
 	private HashMap<Integer, Integer> kFrequencies;
 	
+	public static void main(String[] args){
+		MultiKPathFinder finder = new MultiKPathFinder(0, new ArrayList<InputEdge>(), new ArrayList<Integer>(), new ArrayList<Integer>());
+		finder.nodeKValues = new Integer[]{2, 1, 2, 3, 2, 1};
+		finder.pathLength = 6;
+		System.out.println(finder.numberOfColorings(new Integer[]{0, 1, 2, 3, 4, 5}));
+	}
+	
 	public MultiKPathFinder(Integer size, List<InputEdge> edges, List<Integer> startNodes, List<Integer> endNodes) {
 		super(size, edges, startNodes, endNodes);
 		degreeNodeIndex = new HashMap<Integer, List<Integer>>();
