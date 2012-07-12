@@ -1,0 +1,2 @@
+mint_hsa: 6122 nodes 15472 edges
+mint_ecoli 154 nodes 553 edges
