@@ -41,14 +41,16 @@ public class Main {
 			return;
 		}
 		
-		if (args.length > 0 && args[0].equals("optimal-probability")){
-			Integer pathLength = 7;
+		if (args.length > 0 && args[0].equals("repeat")){
+			Integer pathLength = 4;
 			Integer times = 500;
-			PathFinder finder;
-			if (args.length > 1 && args[1].equals("optimalkhop"))
-				finder = new OptimalKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
-			else
-				finder = new PathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
+			PathFinder finder = null;
+			if (args.length > 1){
+				if (args[1].equals("optimalkhop"))
+					finder = new OptimalKPathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
+				else if(args[1].equals("normal"))
+					finder = new PathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins);
+			}
 			if (args.length > 2)
 				pathLength = new Integer(args[2]);
 			if (args.length > 3)

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -64,45 +65,52 @@ public class PathFinder {
 	public void repeatIteration(Integer pathLength, Integer times){
 		initialize(pathLength);
 		Double failureProbability = 1.0;
-		Double minDistance = infinity;
-		IterationResult[] results = new IterationResult[times];
-		List<Integer> optimalIterations = new ArrayList<Integer>();
+//		Double minDistance = infinity;
+//		IterationResult[] results = new IterationResult[times];
+//		List<Integer> optimalIterations = new ArrayList<Integer>();
+		Long start = System.currentTimeMillis();
 		for (int i=0; i<times; i++){
 //			Long startIteration = System.currentTimeMillis();
 			IterationResult result = iteration();
-//			Long endIteration = System.currentTimeMillis();
+			Long endIteration = System.currentTimeMillis();
+			
 			//update failure probability
-//			failureProbability = failureProbability * (1 - result.successProbability);
-			if (result.distance > minDistance - roundOffError && result.distance < minDistance + roundOffError){ //equals
-				optimalIterations.add(i);
-			}
-			else if (result.distance < minDistance){
-				minDistance = result.distance;
-				optimalIterations = new ArrayList<Integer>();
-				optimalIterations.add(i);
-			}
+			failureProbability = failureProbability * (1 - result.successProbability);
+			
+//			if (result.distance > minDistance - roundOffError && result.distance < minDistance + roundOffError){ //equals
+//				optimalIterations.add(i);
+//			}
+//			else if (result.distance < minDistance){
+//				minDistance = result.distance;
+//				optimalIterations = new ArrayList<Integer>();
+//				optimalIterations.add(i);
+//			}
+			
+			System.out.println("" + i /*+ "\t" + (1.0-sharanFailureProbability)*/ + "\t" + (1.0-failureProbability) /*+ "\t" + minDistance + "\t" + result.distance + "\t" + result.path.toString() */+ "\t" + (endIteration - start));
+			
 //			System.out.println("" + i + "\t\t" + failureProbability + "\t\t" + minDistance + "\t\t" + result.distance + ":" + result.path.toString() + "\t\t" + (endIteration - startIteration));
+			
 //			System.out.println(i);
-			results[i] = result;
+//			results[i] = result;
 		}
-		Integer winnerIndex = optimalIterations.get((int)Math.floor((Math.random() * optimalIterations.size())));
-		IterationResult winner = results[winnerIndex];
-		boolean winnerFound = false;
-		for (int i=0; i<times; i++){
-			failureProbability = failureProbability * (1.0 - results[i].successProbability);
-			String found = "";
-			if (winnerFound)
-				found = "1";
-			else{
-				if (results[i].path.equals(winner.path)){
-					found = "1";
-					winnerFound = true;
-				} else
-					found = "0";
-			}
-			Integer optimal = optimalIterations.contains(i) ? 1 : 0;
-			System.out.println("" + i + "\t" + (1.0 - failureProbability) + "\t" + results[i].path.toString() + "\t" + results[i].distance + "\t" + optimal + "\t" + found);
-		}
+//		Integer winnerIndex = optimalIterations.get((int)Math.floor((Math.random() * optimalIterations.size())));
+//		IterationResult winner = results[winnerIndex];
+//		boolean winnerFound = false;
+//		for (int i=0; i<times; i++){
+//			failureProbability = failureProbability * (1.0 - results[i].successProbability);
+//			String found = "";
+//			if (winnerFound)
+//				found = "1";
+//			else{
+//				if (results[i].path.equals(winner.path)){
+//					found = "1";
+//					winnerFound = true;
+//				} else
+//					found = "0";
+//			}
+//			Integer optimal = optimalIterations.contains(i) ? 1 : 0;
+//			System.out.println("" + i + "\t" + (1.0 - failureProbability) + "\t" + results[i].path.toString() + "\t" + results[i].distance + "\t" + optimal + "\t" + found);
+//		}
 	}
 	
 	public PathResult run(Integer pathLength, Double confidence){
@@ -164,13 +172,13 @@ public class PathFinder {
 		// calculate success probability of this iteration
 		Double successProbability = successProbability();
 		
-//		if (tabulating){
+		if (tabulating){
 			//run DP
-//			List<Integer> path = tabulate();
-//			return new IterationResult(path, minDistance[colorSets.size()-1][path.get(path.size()-1)], successProbability);
-//		} else {
+			List<Integer> path = tabulate();
+			return new IterationResult(path, minDistance[colorSets.size()-1][path.get(path.size()-1)], successProbability);
+		} else {
 			return new IterationResult(new ArrayList<Integer>(), 1.0, successProbability);
-//		}
+		}
 	}
 	
 	protected Double successProbability(){
@@ -224,7 +232,7 @@ public class PathFinder {
 		//Backtrack choosing from endnodes
 		Integer min = endNodes.get(0);
 		for (Integer node : endNodes){
-			if (minDistance[colorSets.size()-1][node] < min){
+			if (minDistance[colorSets.size()-1][node] < minDistance[colorSets.size()-1][min]){
 				min = node;
 			}
 		}
