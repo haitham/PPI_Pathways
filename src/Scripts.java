@@ -20,7 +20,7 @@ import java.util.Map.Entry;
 public class Scripts {
 
 	public static void main(String[] args) {
-		refineMint();
+		summarizeIterations("mint_hsa_4", 500, 20, 1, 0.09342285392478362);
 	}
 	
 	private static class Iteration{
@@ -36,7 +36,7 @@ public class Scripts {
 		}
 	}
 	
-	public static void summarizeIterations(Integer pathlength, Integer iterationsCount, Integer experimentsCount, Integer skipper, Double targetDistance){
+	public static void summarizeIterations(String dir, Integer iterationsCount, Integer experimentsCount, Integer skipper, Double targetDistance){
 		Iteration[][] iterations = new Iteration[iterationsCount][experimentsCount];
 		try {
 			BufferedReader[] readers = new BufferedReader[experimentsCount];
@@ -44,7 +44,7 @@ public class Scripts {
 				String order = "" + (i+1);
 				while (order.length() != ("" + experimentsCount).length())
 					order = "0" + order;
-				readers[i] = new BufferedReader(new InputStreamReader(new FileInputStream("data/iterations/" + pathlength + "." + order + ".out")));
+				readers[i] = new BufferedReader(new InputStreamReader(new FileInputStream("data/iterations/" + dir + "/" + order + ".out")));
 			}
 			for (int i=0; i<iterationsCount; i++){
 				for (int e=0; e<experimentsCount; e++){

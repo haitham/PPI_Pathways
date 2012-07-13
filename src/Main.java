@@ -127,13 +127,10 @@ public class Main {
 			return;
 		}
 		
-//		PathFinder[] randomFinders = new PathFinder[20];
-//		for (int i=0; i<randomFinders.length; i++){
-//			randomFinders[i] = new PathFinder(proteins.size(), shuffledEdges(), membraneProteins, transcriptionProteins);
-//		}
-		
-		
 		finders = new ArrayList<PathFinder>();
+		
+		if (args.length > 3 && args[3].equals("shuffle"))
+			edges = shuffledEdges();
 		
 		if (args.length > 0){
 			if (args[0].equals("optimalkhop"))
@@ -187,13 +184,6 @@ public class Main {
 				for (Double confidence : confidences){
 					System.out.print("(" + length + ", " + confidence + "): ");
 					result = finder.run(length, confidence);
-	//				Integer randomWins = 0;
-	//				for (int i=0; i<randomFinders.length; i++){
-	//					PathResult randomResult = randomFinders[i].run(length, confidence);
-	//					if (randomResult.paths.peek().distance < result.paths.peek().distance){
-	//						randomWins ++;
-	//					}
-	//				}
 					System.out.println(result.iterationsCount + " iterations, " + result.runtime + " milliseconds");
 					System.out.println("" + result.paths.size() + "pathways");
 					IterationResult iteration = null;
@@ -296,19 +286,20 @@ public class Main {
 		}
 	}
 	
-	private static List<InputEdge> shuffledEdges(){
-		List<InputEdge> shuffledEdges = new ArrayList<InputEdge>();
-		List<Integer[]> pairs = new ArrayList<Integer[]>();
-		for (int i=0; i<proteins.size(); i++){
-			for (int j=i+1; j<proteins.size(); j++){
-				pairs.add(new Integer[]{i, j});
-			}
+	private static ArrayList<InputEdge> shuffledEdges(){
+		ArrayList<InputEdge> shuffled = new ArrayList<InputEdge>();
+		List<Integer> pool = new ArrayList<Integer>();
+		for (InputEdge edge : edges){
+			pool.add(edge.to);
 		}
 		for (InputEdge edge : edges){
-			Integer[] pair = pairs.remove((int) Math.floor(pairs.size() * Math.random()));
-			shuffledEdges.add(new InputEdge(pair[0], pair[1], edge.score));
+			int random = (int) Math.floor(pool.size() * Math.random());
+			shuffled.add(new InputEdge(edge.from, pool.get(random), edge.score));
+			pool.remove(random);
 		}
-		return shuffledEdges;
+		if (!pool.isEmpty()) // sanity check
+			System.out.println("SOMETHING IS WRONG.. some nodes left out unshuffled");
+		return shuffled;
 	}
 	
 }
