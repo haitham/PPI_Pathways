@@ -20,7 +20,7 @@ import java.util.Map.Entry;
 public class Scripts {
 
 	public static void main(String[] args) {
-		summarizeIterations("mint_hsa_4", 500, 20, 1, 0.09342285392478362);
+		summarizeIterations("mint_hsa_6", 500, 20, 1, 0.1287673846844192);
 	}
 	
 	private static class Iteration{
