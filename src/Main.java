@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,12 +35,33 @@ public class Main {
 //				nonTerminalCount ++;
 //		}
 		
+		if (args.length > 0 && args[0].equals("randompaths")){
+			Integer pathLength = new Integer(args[1]);
+			Integer size = new Integer(args[2]);
+			Double contestant = new Double(args[3]);
+			Integer better = 0;
+			for (IterationResult result : new PathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins).getRandomPaths(pathLength, size)){
+				if (result.distance < contestant)
+					better ++;
+				System.out.print(result.distance);
+				for (Integer node : result.path)
+					System.out.print(" " + proteins.get(node));
+				System.out.println();
+			}
+			System.out.println("better = " + better);
+			System.out.println("weight p = " + ((1.0*better)/(1.0*size)));
+			return;
+		}
+		
 		if (args.length > 0 && args[0].equals("enrichment")){
 			HashMap<String, List<String>> annotations = readAnnotations(args[1]);
-			HashMap<List<String>, String> paths = readPaths(args[1]);
-			for (List<String> path : paths.keySet()){
-				EnrichmentResult result = new EnrichmentMeter(proteins, annotations, path).measure();
-				System.out.println(paths.get(path) + "\t\t" + result.term() + " " + result.enrichment());
+			HashMap<String, List<String>> paths = readPaths(args[1]);
+			List<String> keys = new ArrayList<String>();
+			keys.addAll(paths.keySet());
+			Collections.sort(keys);
+			for (String path : keys){
+				EnrichmentResult result = new EnrichmentMeter(proteins, annotations, paths.get(path)).measure();
+				System.out.println(path + "\t\t" + result.term() + " " + result.enrichment());
 			}
 			return;
 		}
@@ -223,8 +245,8 @@ public class Main {
 		return annotations;
 	}
 	
-	private static HashMap<List<String>, String> readPaths(String dir){
-		HashMap<List<String>, String> paths = new HashMap<List<String>, String>();
+	private static HashMap<String, List<String>> readPaths(String dir){
+		HashMap<String, List<String>> paths = new HashMap<String, List<String>>();
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(dir + "/paths.txt"))));
 			String line = null;
@@ -233,7 +255,10 @@ public class Main {
 				String[] parts = line.split("\\s+");
 				for (int i=0; i<parts.length-1; i++)
 					path.add(parts[i]);
-				paths.put(path, line);
+				String newLine = parts[parts.length-1];
+				for (int i=0; i<parts.length-1; i++)
+					newLine = newLine + " " + parts[i];
+				paths.put(newLine, path);
 			}
 			reader.close();
 		} catch (Exception e) {

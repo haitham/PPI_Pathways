@@ -20,9 +20,8 @@ import java.util.Map.Entry;
 public class Scripts {
 
 	public static void main(String[] args) {
-//		summarizeIterations("mint_hsa_6", 500, 20, 1, 0.1287673846844192);
-		restoreGODatabase();
-		
+		summarizeIterations("mint_hsa_8", 500, 20, 1, 0.2207872834051713);
+//		restoreGODatabase();
 	}
 	
 	private static class Iteration{

@@ -53,6 +53,48 @@ public class PathFinder {
 		}
 	}
 	
+	public List<IterationResult> getRandomPaths(Integer pathLength, Integer size){
+		List<IterationResult> paths = new ArrayList<IterationResult>();
+		while (paths.size() < size){
+			List<Integer> path = new ArrayList<Integer>();
+			Double pathScore = 0.0;
+			boolean[] visited = new boolean[networkSize];
+			Integer current = startNodes.get((int) Math.floor(startNodes.size()*Math.random()));
+			path.add(current);
+			visited[current] = true;
+			boolean success = true;
+			for (int i=0; i<pathLength-1; i++){
+				List<Integer> candidates = new ArrayList<Integer>();
+				for (int j=0; j<networkSize; j++){
+					if (current.equals(j))
+						continue;
+					if (network[current][j] < infinity - 1 && !visited[j]){
+						if (i == pathLength-1){
+							if (endNodes.contains(j))
+								candidates.add(j);
+						}
+						else
+							candidates.add(j);
+					}
+				}
+				if (candidates.isEmpty()){
+					success = false;
+					break;
+				}
+				Integer next = candidates.get((int)Math.floor(candidates.size()*Math.random()));
+				pathScore += network[current][next];
+				current = next;
+				path.add(current);
+				visited[current] = true;
+			}
+			if (success){
+				paths.add(new IterationResult(path, pathScore, 0.0));
+			}
+		}
+		System.out.println();
+		return paths;
+	}
+	
 	protected void initialize(Integer pathLength){
 		this.pathLength = pathLength;
 		colorSets = PathFinder.powerset(pathLength);
