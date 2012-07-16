@@ -35,9 +35,12 @@ public class Main {
 //		}
 		
 		if (args.length > 0 && args[0].equals("enrichment")){
-			HashMap<String, List<String>> annotations = readAnnotations();
-			List<String> path = readPath();
-			System.out.println(new EnrichmentMeter(proteins, annotations, path).measure());
+			HashMap<String, List<String>> annotations = readAnnotations(args[1]);
+			HashMap<List<String>, String> paths = readPaths(args[1]);
+			for (List<String> path : paths.keySet()){
+				EnrichmentResult result = new EnrichmentMeter(proteins, annotations, path).measure();
+				System.out.println(paths.get(path) + "\t\t" + result.term() + " " + result.enrichment());
+			}
 			return;
 		}
 		
@@ -198,10 +201,10 @@ public class Main {
 		}
 	}
 	
-	private static HashMap<String, List<String>> readAnnotations(){
+	private static HashMap<String, List<String>> readAnnotations(String path){
 		HashMap<String, List<String>> annotations = new HashMap<String, List<String>>();
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream("data/annotations.txt"))));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(path + "/annotations.txt"))));
 			String line = null;
 			while ((line = reader.readLine()) != null){
 				String[] parts = line.trim().split("\\s+");
@@ -220,17 +223,23 @@ public class Main {
 		return annotations;
 	}
 	
-	private static List<String> readPath(){
-		List<String> path = null;
+	private static HashMap<List<String>, String> readPaths(String dir){
+		HashMap<List<String>, String> paths = new HashMap<List<String>, String>();
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream("data/path.txt"))));
-			String line = reader.readLine();
-			path = Arrays.asList(line.split("\\s+"));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(dir + "/paths.txt"))));
+			String line = null;
+			while ((line = reader.readLine()) != null){
+				List<String> path = new ArrayList<String>();
+				String[] parts = line.split("\\s+");
+				for (int i=0; i<parts.length-1; i++)
+					path.add(parts[i]);
+				paths.put(path, line);
+			}
 			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return path;
+		return paths;
 	}
 	
 	private static void readTerminals(){

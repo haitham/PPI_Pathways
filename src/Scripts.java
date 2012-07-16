@@ -20,7 +20,9 @@ import java.util.Map.Entry;
 public class Scripts {
 
 	public static void main(String[] args) {
-		summarizeIterations("mint_hsa_6", 500, 20, 1, 0.1287673846844192);
+//		summarizeIterations("mint_hsa_6", 500, 20, 1, 0.1287673846844192);
+		restoreGODatabase();
+		
 	}
 	
 	private static class Iteration{
@@ -167,26 +169,26 @@ public class Scripts {
 	}
 	
 	public static void restoreGODatabase(){
-//		for (File file: new File("C:/Users/hgabr/Desktop/go_201206-assocdb-tables").listFiles()){
-//			if (file.getName().indexOf(".sql") > 0){
-//				try {
-//					Process process = Runtime.getRuntime().exec("cmd /c mysql -u root go < " + "c:\\Users\\hgabr\\Desktop\\go_201206-assocdb-tables\\" + file.getName());
-//					System.out.println(process.waitFor());
-//					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-//					String line = null;
-//					while ((line = reader.readLine()) != null){
-//						System.out.println(line);
-//					}
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-		for (File file: new File("C:/Users/hgabr/Desktop/go_201206-assocdb-tables").listFiles()){
+		for (File file: new File("C:/Users/hgabr/Desktop/go_201207-assocdb-tables").listFiles()){
+			if (file.getName().indexOf(".sql") > 0){
+				try {
+					Process process = Runtime.getRuntime().exec("cmd /c mysql -u root go < " + "c:\\Users\\hgabr\\Desktop\\go_201207-assocdb-tables\\" + file.getName());
+					System.out.println(process.waitFor());
+					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+					String line = null;
+					while ((line = reader.readLine()) != null){
+						System.out.println(line);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		for (File file: new File("C:/Users/hgabr/Desktop/go_201207-assocdb-tables").listFiles()){
 			if (file.getName().indexOf(".txt") > 0){
 				try {
 					System.out.println(file.getName());
-					Process process = Runtime.getRuntime().exec("cmd /c mysqlimport -u root -L go " + "c:\\Users\\hgabr\\Desktop\\go_201206-assocdb-tables\\" + file.getName());
+					Process process = Runtime.getRuntime().exec("cmd /c mysqlimport -u root -L go " + "c:\\Users\\hgabr\\Desktop\\go_201207-assocdb-tables\\" + file.getName());
 					System.out.println(process.waitFor());
 					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 					String line = null;

@@ -37,20 +37,24 @@ public class EnrichmentMeter {
 		}
 	}
 	
-	public Double measure(){
+	public EnrichmentResult measure(){
 		Double minEnrichment = 1.01;
+		String minTerm = null;
 		for (String term : termAnnotations.keySet()){
 			Double enrichment = measureTerm(term);
-			if (enrichment < minEnrichment)
+			if (enrichment < minEnrichment){
 				minEnrichment = enrichment;
+				minTerm = term;
+			}
 		}
-		return minEnrichment;
+		return new EnrichmentResult(minTerm, minEnrichment);
 	}
 	
 	private Double measureTerm(String term){
 		Integer annotatedSize = 0;
 		for (String protein : path){
-			if (proteinAnnotations.get(protein).contains(term))
+			List<String> annotations = proteinAnnotations.get(protein);
+			if (annotations != null && annotations.contains(term))
 				annotatedSize += 1;
 		}
 		Double enrichment = 0.0;
