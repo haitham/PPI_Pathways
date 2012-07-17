@@ -20,8 +20,9 @@ import java.util.Map.Entry;
 public class Scripts {
 
 	public static void main(String[] args) {
-		summarizeIterations("mint_hsa_8", 500, 20, 1, 0.2207872834051713);
+//		summarizeIterations("mint_hsa_8", 500, 20, 1, 0.2207872834051713);
 //		restoreGODatabase();
+		refineMint("10116");
 	}
 	
 	private static class Iteration{
@@ -248,9 +249,9 @@ public class Scripts {
 		}
 	}
 	
-	public static void refineMint(){
+	public static void refineMint(String taxaId){
 		try{
-			FileInputStream iStream = new FileInputStream("data/4932_all.graph");
+			FileInputStream iStream = new FileInputStream("data/mint/" + taxaId + "_all.graph");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(iStream)));
 			FileOutputStream oStream = new FileOutputStream("data/mint_custom.txt");
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(oStream)));
