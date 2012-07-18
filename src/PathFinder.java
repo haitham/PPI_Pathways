@@ -110,14 +110,20 @@ public class PathFinder {
 //		Double minDistance = infinity;
 //		IterationResult[] results = new IterationResult[times];
 //		List<Integer> optimalIterations = new ArrayList<Integer>();
-		Long start = System.currentTimeMillis();
+		long totalTime = 0;
 		for (int i=0; i<times; i++){
-//			Long startIteration = System.currentTimeMillis();
+			Long startIteration = System.currentTimeMillis();
 			IterationResult result = iteration();
-			Long endIteration = System.currentTimeMillis();
+			if (result.path.size() != pathLength){
+				// remove the time taken in this in-vain iteration
+				i--;
+				continue;
+			}
 			
 			//update failure probability
 			failureProbability = failureProbability * (1 - result.successProbability);
+			
+			totalTime += (System.currentTimeMillis() - startIteration);
 			
 //			if (result.distance > minDistance - roundOffError && result.distance < minDistance + roundOffError){ //equals
 //				optimalIterations.add(i);
@@ -128,7 +134,7 @@ public class PathFinder {
 //				optimalIterations.add(i);
 //			}
 			
-			System.out.println("" + i /*+ "\t" + (1.0-sharanFailureProbability)*/ + "\t" + (1.0-failureProbability) /*+ "\t" + minDistance + "\t" + result.distance + "\t" + result.path.toString() */+ "\t" + (endIteration - start));
+			System.out.println("" + i + "\t" + (1.0-failureProbability) /*+ "\t" + minDistance + "\t" + result.distance + "\t" + result.path.toString() */+ "\t" + totalTime);
 			
 //			System.out.println("" + i + "\t\t" + failureProbability + "\t\t" + minDistance + "\t\t" + result.distance + ":" + result.path.toString() + "\t\t" + (endIteration - startIteration));
 			
@@ -286,9 +292,9 @@ public class PathFinder {
 			set = set.cloneWithout(nodeColors[min]);
 			min = minNode[setIndex][min];
 		}
-		if (!startNodes.contains(path.get(0))){
-			System.out.println("No colorful path found");
-		}
+//		if (!startNodes.contains(path.get(0))){
+//			System.out.println("No colorful path found");
+//		}
 		return path;
 	}
 	

@@ -13,21 +13,27 @@ public class OptimalKPathFinder extends MultiKPathFinder {
 		initialize(pathLength);
 //		initializeColorPooling();
 		Double failureProbability = 1.0;
-//		Double sharanFailureProbability = 1.0;
-//		Double sharanConstant = sharanSuccessProbability();
-//		Double minDistance = infinity;
-		Long start = System.currentTimeMillis();
+		Double sharanFailureProbability = 1.0;
+		Double sharanConstant = sharanSuccessProbability();
+		Double minDistance = infinity;
+		long totalTime = 0;
 		for (int i=0; i<times; i++){
-//			Long startIteration = System.currentTimeMillis();
+			Long startIteration = System.currentTimeMillis();
 			IterationResult result = iteration();
-			Long endIteration = System.currentTimeMillis();
+			if (result.path.size() != pathLength){
+				// remove the time taken in this in-vain iteration
+				i--;
+				continue;
+			}
 			//update failure probability
 			failureProbability = failureProbability * (1 - result.successProbability);
-//			sharanFailureProbability = sharanFailureProbability * (1 - sharanConstant);
-//			if (result.distance < minDistance){
-//				minDistance = result.distance;
-//			}
-			System.out.println("" + i /*+ "\t" + (1.0-sharanFailureProbability)*/ + "\t" + (1.0-failureProbability) /*+ "\t" + minDistance + "\t" + result.distance + "\t" + result.path.toString() */+ "\t" + (endIteration - start));
+			totalTime += (System.currentTimeMillis() - startIteration);
+			
+			sharanFailureProbability = sharanFailureProbability * (1 - sharanConstant);
+			if (result.distance < minDistance){
+				minDistance = result.distance;
+			}
+			System.out.println("" + i + "\t" + (1.0-sharanFailureProbability) + "\t" + (1.0-failureProbability) + "\t" + minDistance /*+ "\t" + result.distance + "\t" + result.path.toString() */+ "\t" + totalTime);
 		}
 	}
 	
