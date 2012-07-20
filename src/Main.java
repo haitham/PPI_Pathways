@@ -35,21 +35,35 @@ public class Main {
 //				nonTerminalCount ++;
 //		}
 		
-		if (args.length > 0 && args[0].equals("randompaths")){
+		if (args.length > 0 && args[0].equals("zscore")){
 			Integer pathLength = new Integer(args[1]);
 			Integer size = new Integer(args[2]);
 			Double contestant = new Double(args[3]);
 			Integer better = 0;
-			for (IterationResult result : new PathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins).getRandomPaths(pathLength, size)){
-				if (result.distance < contestant)
-					better ++;
-				System.out.print(result.distance);
-				for (Integer node : result.path)
-					System.out.print(" " + proteins.get(node));
-				System.out.println();
+			List<IterationResult> randoms = new PathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins).getRandomPaths(pathLength, size);
+			Double average = 0.0;
+			for (IterationResult result : randoms){
+//				if (result.distance < contestant)
+//					better ++;
+//				System.out.print(result.distance);
+//				for (Integer node : result.path)
+//					System.out.print(" " + proteins.get(node));
+//				System.out.println();
+				average += result.distance;
 			}
-			System.out.println("better = " + better);
-			System.out.println("weight p = " + ((1.0*better)/(1.0*size)));
+			average = average / size;
+			Double deviation = 0.0;
+			for (IterationResult result : randoms){
+				deviation += (0.0 + average - result.distance) * (0.0 + average - result.distance);
+			}
+			deviation = Math.sqrt(deviation / size);
+			Double z = (average - contestant) / deviation;
+			System.out.println("Best = " + contestant);
+			System.out.println("Average = " + average);
+			System.out.println("Deviation = " + deviation);
+			System.out.println("Z-score = " + z);
+//			System.out.println("better = " + better);
+//			System.out.println("weight p = " + ((1.0*better)/(1.0*size)));
 			return;
 		}
 		

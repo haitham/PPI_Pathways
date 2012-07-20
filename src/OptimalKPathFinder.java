@@ -27,13 +27,15 @@ public class OptimalKPathFinder extends MultiKPathFinder {
 			}
 			//update failure probability
 			failureProbability = failureProbability * (1 - result.successProbability);
-			totalTime += (System.currentTimeMillis() - startIteration);
+			long iterationTime = System.currentTimeMillis() - startIteration;
+			totalTime += iterationTime;
 			
 			sharanFailureProbability = sharanFailureProbability * (1 - sharanConstant);
 			if (result.distance < minDistance){
 				minDistance = result.distance;
 			}
-			System.out.println("" + i + "\t" + (1.0-sharanFailureProbability) + "\t" + (1.0-failureProbability) + "\t" + minDistance /*+ "\t" + result.distance + "\t" + result.path.toString() */+ "\t" + totalTime);
+//			System.out.println("" + i + "\t" + (1.0-sharanFailureProbability) + "\t" + (1.0-failureProbability) + "\t" + minDistance /*+ "\t" + result.distance + "\t" + result.path.toString() */+ "\t" + totalTime);
+			System.out.println("" + i + "\t" + sharanConstant + "\t" + result.successProbability + "\t" + result.distance + "\t" + iterationTime);
 		}
 	}
 	
