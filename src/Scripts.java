@@ -20,7 +20,8 @@ import java.util.Map.Entry;
 public class Scripts {
 
 	public static void main(String[] args) {
-		summarizeIterations("mint_rat_8", 500, 40, 2, 4.858445827937206);
+		filterParallel("data/iterations/mint_hsa_8/parallel");
+//		summarizeIterations("mint_rat_8", 500, 40, 2, 4.858445827937206);
 //		restoreGODatabase();
 //		refineMint("10116");
 	}
@@ -335,6 +336,35 @@ public class Scripts {
 			}
 			reader.close();
 			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void filterParallel(String dir){
+		List<String> filenames = Arrays.asList(new File(dir).list());
+		try {
+			Integer outName = 0;
+			for (String filename : filenames){
+				if (filename.equals("complete"))
+					continue;
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(dir + "/" + filename))));
+				String line = null;
+				List<String> lines = new ArrayList<String>();
+				while ((line = reader.readLine()) != null){
+					lines.add(line);
+				}
+				reader.close();
+				if (lines.size() == 125){
+					outName ++;
+					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(new FileOutputStream(dir + "/complete/" + outName))));
+					for (String out : lines){
+						writer.write(out + "\n");
+					}
+					writer.close();
+				}
+			}
+			System.out.println(outName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
