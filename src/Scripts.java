@@ -20,8 +20,10 @@ import java.util.Map.Entry;
 public class Scripts {
 
 	public static void main(String[] args) {
-		filterParallel("data/iterations/mint_hsa_8/parallel");
-//		summarizeIterations("mint_rat_8", 500, 40, 2, 4.858445827937206);
+//		millisecondsToSeconds("data/times/mint_rat");
+//		consolidateParallel("data/iterations/mint_hsa_6/parallel", 21, 2);
+//		filterParallel("data/iterations/mint_hsa_8/parallel", 125);
+		summarizeIterations("mint_rat_8", 500, 100, 5, 4.858445827937206);
 //		restoreGODatabase();
 //		refineMint("10116");
 	}
@@ -39,15 +41,86 @@ public class Scripts {
 		}
 	}
 	
+	public static void millisecondsToSeconds(String dir){
+		List<String> filenames = Arrays.asList(new File(dir).list());
+		try {
+			for (String filename : filenames){
+				if (!filename.endsWith(".out"))
+					continue;
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(dir + "/" + filename))));
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(new FileOutputStream(dir + "/seconds/" + filename))));
+				String line = null;
+				while ((line = reader.readLine()) != null){
+					String[] parts = line.split("\\s+");
+					Double milli = new Double(parts[parts.length-1]);
+					parts[parts.length-1] = "" + milli/1000.0;
+					for (int i=0; i<parts.length; i++){
+						writer.write(parts[i] + "\t");
+					}
+					writer.write("\n");
+				}
+				reader.close();
+				writer.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void consolidateParallel(String dir, Integer outName, Integer batchSize){
+		List<String> filenames = Arrays.asList(new File(dir).list());
+		try {
+			Integer fileCount = 0;
+			Integer iterationNumber = 0;
+			Double sharan = 0.0;
+			Double me = 0.0;
+			Double min = 1000000.0;
+			Integer outCount = 0;
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(new FileOutputStream(dir + "/consolidated/" + outName + ".out"))));
+			for (String filename : filenames){
+				if (filename.equals("consolidated"))
+					continue;
+				fileCount ++;
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(dir + "/" + filename))));
+				String line = null;
+				while ((line = reader.readLine()) != null){
+					String[] parts = line.split("\\s+");
+					sharan = 1.0 - (1.0 - sharan)*(1.0 - new Double(parts[1]));
+					me = 1.0 - (1.0 - me)*(1.0 - new Double(parts[2]));
+					Double score = new Double(parts[3]);
+					if (score < min)
+						min = score;
+					writer.write(iterationNumber + "\t" + sharan + "\t" + me + "\t" + min + "\t" + parts[4] + "\n");
+					iterationNumber ++;
+				}
+				reader.close();
+				if (fileCount == batchSize){
+					outCount ++;
+					iterationNumber = 0;
+					System.out.println(outCount);
+					sharan = 0.0;
+					me = 0.0;
+					min = 1000000.0;
+					outName ++;
+					writer.close();
+					writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(new FileOutputStream(dir + "/consolidated/" + outName + ".out"))));
+					fileCount = 0;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void summarizeIterations(String dir, Integer iterationsCount, Integer experimentsCount, Integer skipper, Double targetDistance){
 		Iteration[][] iterations = new Iteration[iterationsCount][experimentsCount];
 		try {
 			BufferedReader[] readers = new BufferedReader[experimentsCount];
 			for (int i=0; i<experimentsCount; i++){
-				String order = "" + (i+1);
-				while (order.length() != ("" + experimentsCount).length())
-					order = "0" + order;
-				readers[i] = new BufferedReader(new InputStreamReader(new FileInputStream("data/iterations/" + dir + "/" + order + ".out")));
+//				String order = "" + (i+1);
+//				while (order.length() != ("" + experimentsCount).length())
+//					order = "0" + order;
+				readers[i] = new BufferedReader(new InputStreamReader(new FileInputStream("data/iterations/" + dir + "/" + (i+1) + ".out")));
 			}
 			for (int i=0; i<iterationsCount; i++){
 				for (int e=0; e<experimentsCount; e++){
@@ -341,7 +414,7 @@ public class Scripts {
 		}
 	}
 	
-	public static void filterParallel(String dir){
+	public static void filterParallel(String dir, int count){
 		List<String> filenames = Arrays.asList(new File(dir).list());
 		try {
 			Integer outName = 0;
@@ -355,7 +428,7 @@ public class Scripts {
 					lines.add(line);
 				}
 				reader.close();
-				if (lines.size() == 125){
+				if (lines.size() == count){
 					outName ++;
 					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(new FileOutputStream(dir + "/complete/" + outName))));
 					for (String out : lines){
