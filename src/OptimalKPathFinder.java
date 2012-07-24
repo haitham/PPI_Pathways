@@ -34,8 +34,17 @@ public class OptimalKPathFinder extends MultiKPathFinder {
 			if (result.distance < minDistance){
 				minDistance = result.distance;
 			}
+			
+			/////////////////TEMP//////////////
+			String colors = "{";
+			for (Integer node : Arrays.asList(564, 8, 511, 44, 512, 11)){
+				colors = colors + nodeColors[node] + " ";
+			}
+			colors = colors + "}";
+			///////////////////////////////////
+				
 //			System.out.println("" + i + "\t" + (1.0-sharanFailureProbability) + "\t" + (1.0-failureProbability) + "\t" + minDistance /*+ "\t" + result.distance + "\t" + result.path.toString() */+ "\t" + totalTime);
-			System.out.println("" + i + "\t" + sharanConstant + "\t" + result.successProbability + "\t" + result.distance + "\t" + iterationTime);
+			System.out.println("" + i + "\t" + sharanConstant + "\t" + result.successProbability + "\t" + result.distance + "\t" + iterationTime + "\t" + colors);
 		}
 	}
 	

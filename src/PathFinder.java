@@ -63,7 +63,7 @@ public class PathFinder {
 			path.add(current);
 			visited[current] = true;
 			boolean success = true;
-			for (int i=0; i<pathLength-1; i++){
+			for (int i=1; i<pathLength; i++){
 				List<Integer> candidates = new ArrayList<Integer>();
 				for (int j=0; j<networkSize; j++){
 					if (current.equals(j))

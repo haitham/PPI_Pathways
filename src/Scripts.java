@@ -23,7 +23,7 @@ public class Scripts {
 //		millisecondsToSeconds("data/times/mint_rat");
 //		consolidateParallel("data/iterations/mint_hsa_6/parallel", 21, 2);
 //		filterParallel("data/iterations/mint_hsa_8/parallel", 125);
-		summarizeIterations("mint_rat_8", 500, 100, 5, 4.858445827937206);
+		summarizeIterations("mint_hsa_8", 500, 20, 2, 0.2207872834051713);
 //		restoreGODatabase();
 //		refineMint("10116");
 	}

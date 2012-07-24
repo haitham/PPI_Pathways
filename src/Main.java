@@ -39,7 +39,7 @@ public class Main {
 			Integer pathLength = new Integer(args[1]);
 			Integer size = new Integer(args[2]);
 			Double contestant = new Double(args[3]);
-			Integer better = 0;
+//			Integer better = 0;
 			List<IterationResult> randoms = new PathFinder(proteins.size(), edges, membraneProteins, transcriptionProteins).getRandomPaths(pathLength, size);
 			Double average = 0.0;
 			for (IterationResult result : randoms){
@@ -50,6 +50,9 @@ public class Main {
 //					System.out.print(" " + proteins.get(node));
 //				System.out.println();
 				average += result.distance;
+				
+//				if (result.distance < contestant)
+//					System.out.println("" + result.distance + "\t" + result.path);
 			}
 			average = average / size;
 			Double deviation = 0.0;
